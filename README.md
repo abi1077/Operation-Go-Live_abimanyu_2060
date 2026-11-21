@@ -1,67 +1,63 @@
-# Garuda-Hub
+# Garuda-Hub (Tugas Refactoring MVC Laravel)
 
-Website lelang proyek IT: klien memasang proyek, developer menawar, klien memilih pemenang. Dibuat untuk **studi kasus pembelajaran keamanan** mahasiswa dengan praktik PHP standar. Semua data adalah data dummy.
+Tugas refactoring sistem lelang proyek IT **Garuda-Hub** dari PHP Native (*spaghetti code*) ke framework **Laravel** dengan arsitektur **MVC** dan **Eloquent ORM**.
 
-## PERINGATAN
+## Struktur & Perubahan Sistem
 
-- **Hanya untuk komputer lokal atau lingkungan belajar.** Jangan dipasang di server publik atau internet.
-- Konfigurasi bawaan memakai database `root` dengan password kosong. Itu hanya aman di komputer lokal.
-- Tidak ada pembatasan percobaan login (rate limit).
-- Tidak ada header keamanan `X-Frame-Options` maupun `Content-Security-Policy`.
-- Jangan memasukkan data pribadi atau password asli.
+1. **Database & Migrations**
+   - Skema database diatur ulang lewat file migrasi di `database/migrations/`:
+     - `users`: data akun (klien, developer, admin).
+     - `projects`: data proyek yang dibuat oleh klien.
+     - `bids`: penawaran proyek dari developer.
+   - Relasi antar tabel:
+     - User (klien) -> Projects (One to Many)
+     - Project -> Bids (One to Many)
+     - User (developer) -> Bids (One to Many)
 
-## Fitur
+2. **Model & Eloquent ORM**
+   - File model berada di `app/Models/` (`User.php`, `Project.php`, `Bid.php`).
+   - Query manual `mysqli` diganti total menggunakan Eloquent ORM.
 
-- Daftar dan login dengan peran klien, developer, admin
-- Klien memasang proyek (judul, deskripsi, kategori, budget, batas lelang)
-- Daftar, pencarian, dan detail proyek beserta penawaran
-- Developer mengajukan penawaran (harga, durasi, proposal)
-- Klien memilih pemenang
-- Dasbor per peran dan panel admin
+3. **Controller & Routing**
+   - Alur logic dipisah ke controller di `app/Http/Controllers/`:
+     - `AuthController.php`: login, register, logout.
+     - `ProjectController.php`: list proyek, pencarian, detail, pasang proyek.
+     - `BidController.php`: submit tawaran dan penentuan pemenang.
+     - `DashboardController.php`: dashboard user.
+     - `AdminController.php`: panel kelola user dan proyek.
+   - Route web didefinisikan di `routes/web.php`.
 
-## Kebutuhan
+4. **Tampilan (Blade Views)**
+   - View menggunakan Blade template di `resources/views/`:
+     - Layout utama: `resources/views/layouts/app.blade.php`.
+     - Folder `projects/`, `auth/`, `dashboard/`, dan `admin/`.
 
-- PHP 8.1 atau lebih baru dengan ekstensi `mysqli`
-- MySQL atau MariaDB
+---
 
-## Instalasi
+## Cara Menjalankan
 
-1. Klon repositori ini lalu masuk ke foldernya.
-2. Impor skema dan data dummy:
+1. Masuk ke direktori aplikasi:
+   ```bash
+   cd laravel-app
    ```
-   mysql -u root -p < src/database.sql
+
+2. Jalankan migrasi dan seeder:
+   ```bash
+   php artisan migrate:fresh --seed
    ```
-   Ini membuat database `garuda_hub` dan **menghapus** tabel `users`, `projects`, `bids` jika sudah ada.
-3. (Opsional) Atur koneksi database lewat variabel lingkungan:
 
-   | Variabel | Bawaan |
-   | --- | --- |
-   | `GH_DB_HOST` | `127.0.0.1` |
-   | `GH_DB_USER` | `root` |
-   | `GH_DB_PASS` | kosong |
-   | `GH_DB_NAME` | `garuda_hub` |
-   | `GH_DB_PORT` | `3306` |
-
-   Contoh: `export GH_DB_USER=nama_pengguna_anda`
-4. Jalankan server bawaan PHP:
+3. Jalankan server lokal:
+   ```bash
+   php artisan serve
    ```
-   php -S localhost:8000 -t src
-   ```
-5. Buka `http://localhost:8000`.
+   Buka di browser: `http://127.0.0.1:8000`
 
-## Akun dummy
+---
 
-Data awal berisi akun fiktif berdomain `example.com`: satu admin (`admin@example.com`), klien (`budi@`, `siti@`, `agus@`), dan developer (`dewi@`, `eko@`, `fitri@`, `gilang@`). Password tidak dicantumkan di sini. Anda dapat mendaftar akun baru sebagai klien atau developer lewat halaman Daftar.
+## Akun Demo
 
-## Struktur
-
-- `src/index.php`: seluruh aplikasi (routing lewat `?page=`)
-- `src/database.sql`: skema dan data dummy
-
-## Panduan pemakaian
-
-Lihat folder `docs/user/` bila tersedia.
-
-## Lisensi
-
-MIT. Lihat [LICENSE](LICENSE).
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@example.com | admin123 |
+| Klien | budi@example.com | password123 |
+| Developer | dewi@example.com | password123 |
