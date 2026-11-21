@@ -1,5 +1,11 @@
 <?php
 
+// ========================================================
+// NIM: 252410102060 - Abimanyu
+// Mata Kuliah: Pemrograman Berbasis Web
+// Episode 2: The Phantom Vulnerability (Security Refactoring)
+// ========================================================
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
