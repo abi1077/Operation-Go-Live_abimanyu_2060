@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
     // Klien memilih pemenang
     Route::post('/bids/pick', [BidController::class, 'pickWinner'])->name('bids.pick');
 
+    // Catatan rilis produksi versi 1.0 (main branch)
+    Route::get('/health-check', fn() => response()->json(['status' => 'healthy', 'env' => 'production']));
+
     // Dasbor (Klien & Developer)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
