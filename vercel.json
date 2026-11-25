@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "framework": null,
+  "builds": [
+    {
+      "src": "laravel-app/api/index.php",
+      "use": "vercel-php@0.7.3"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/laravel-app/api/index.php"
+    }
+  ]
+}
