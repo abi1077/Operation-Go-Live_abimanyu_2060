@@ -12,6 +12,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RatingController;
 
 // Halaman Beranda / Katalog Proyek
 Route::get('/', [ProjectController::class, 'index'])->name('home');
@@ -42,8 +43,11 @@ Route::middleware('auth')->group(function () {
     // Klien memilih pemenang
     Route::post('/bids/pick', [BidController::class, 'pickWinner'])->name('bids.pick');
 
-    // Catatan rilis produksi versi 1.0 (main branch)
+    // Endpoint health-check (production deployment)
     Route::get('/health-check', fn() => response()->json(['status' => 'healthy', 'env' => 'production']));
+
+    // Fitur Rating Proyek & Developer (Resolved dari branch operation-go-live)
+    Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
 
     // Dasbor (Klien & Developer)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
