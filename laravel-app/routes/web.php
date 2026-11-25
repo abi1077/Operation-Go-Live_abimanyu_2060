@@ -12,6 +12,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RatingController;
 
 // Halaman Beranda / Katalog Proyek
 Route::get('/', [ProjectController::class, 'index'])->name('home');
@@ -41,6 +42,9 @@ Route::middleware('auth')->group(function () {
 
     // Klien memilih pemenang
     Route::post('/bids/pick', [BidController::class, 'pickWinner'])->name('bids.pick');
+
+    // Fitur Rating Proyek & Developer (Branch: operation-go-live)
+    Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
 
     // Dasbor (Klien & Developer)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
